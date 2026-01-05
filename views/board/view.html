@@ -1,0 +1,46 @@
+{% include "include/header.html"%}
+
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>게시판 보기</h1>
+    </div><!-- End Page Title -->
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between">
+                            <span>조회수 {{viewData.viewcount}}</span>
+                            <span>{{common.dateFormat(viewData.regdate)}}</span>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{viewData.title}}</h5>
+                        {{common.replaceNLtoBR(viewData.content) | safe }}
+                    </div>
+                    <div class="card-footer">
+                        <div class="text-center">
+                            <a href="/board/?page={{page}}&searchKey={{searchKey}}" class="btn btn-secondary">목록</a>
+                            {% if loginUserInfo.id == viewData.fkmember %}
+                            <a href = "/board/modify?id={{viewData.id}}&page={{page}}&searchKey={{searchKey}}&userId={{loginUserInfo.id}}" class="btn btn-primary">수정</a>
+                            <button type=button onclick="checkDelete();" class="btn btn-danger">삭제</button>
+                                {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+
+        function checkDelete() {
+            if (confirm('정말 삭제하시겠습니까?')) {
+                location.href = '/board/delete?id={{viewData.id}}';
+            }
+        }
+    </script>
+</main><!-- End #main -->
+
+{% include "include/footer.html"%}

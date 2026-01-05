@@ -1,0 +1,60 @@
+{% include "include/header.html"%}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>회원정보보기</h1>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between">
+                            <span>&nbsp;</span>
+                            <span>
+                                {% if viewData %}
+                                <span>회원가입일: {{common.dateFormat(viewData.regdate)}}</span>
+                                {% else %}
+                                <span>데이터가 존재하지 않습니다.</span>
+                                {% endif %}
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{viewData.name}}님의 회원정보</h5>
+                        <div class="row">
+                            <div class="col-lg-2 label ">이름</div>
+                            <div class="col-md-8">{{viewData.name}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2 label ">ID</div>
+                            <div class="col-lg-6 col-md-8">{{viewData.userid}}</div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-2 label ">비밀번호</div>
+                            <div class="col-lg-6 col-md-8">
+                                {{viewData.passwd}}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-footer">
+                        <div class="text-center">
+                            <a href="/member/" class="btn btn-secondary">목록</a>
+                            <a href = "/member/modify?id={{id}}&page={{page}}&searchKey={{searchKey}}" class="btn btn-primary">수정</a>
+                            <button type=button onclick="checkDelete();" class="btn btn-danger">삭제</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+
+        function checkDelete() {
+            if (confirm('정말 삭제하시겠습니까?')) {
+                location.href = '/member/delete?id={{viewData.id}}';
+            }
+        }
+    </script>
+</main><!-- End main -->
+{%include "include/footer.html"%}

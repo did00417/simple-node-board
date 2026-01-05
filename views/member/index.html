@@ -1,0 +1,59 @@
+{% include "include/header.html"%}
+<main id="main" class="main">
+
+    <div class="pagetitle">
+        <h1>회원정보</h1>
+    </div>
+
+    <section class="section">
+        <div class="row">
+            <div class="col-lg-12">
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="d-flex justify-content-between">
+                            <form method="get" action="/member/" class = "search-form d-flex align-item-center">
+                                <div class="input-group">
+                                    <input type = "text" name="searchKey" value="{{searchKey}}" placeholder="아이디/이름 검색"/>
+                                    <button class="btn btn-primary" type="submit">검색</button> 
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col" class="col-lg-6">아이디</th>
+                                    <th scope="col" class="col-lg-3">이름</th>
+                                    <th scope="col">등록일</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                {% if list != null %}
+                                    {% for item in list %}
+                                <tr>
+                                    <th scope="row">{{item.id}}</th>
+                                    <td><a href="/member/view?id={{item.id}}&page={{page}}&searchKey={{searchKey}}">{{item.userid}}</a></td>
+                                    <td>{{item.name}}</td>
+                                    <td>{{common.dateFormat(item.regdate)}}</td>
+                                </tr>
+                                    {% endfor %}
+                                {% else %}
+                                <tr>
+                                    <td colspan="5">등록된 데이터가 없습니다.</td>
+                                </tr>
+                                {% endif %}
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="card-footer">
+                        {{common.pageNavigation(page, totalRecord, '/member', '&searchKey=' + searchKey) | safe}}
+                    </div>
+                </div>
+            </div>
+    </section>
+</main>
+{%include "include/footer.html"%}

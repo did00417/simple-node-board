@@ -1,0 +1,135 @@
+{% include "include/header.html"%}
+
+<main>
+    <div class="container">
+        <section class="section register min-vh-100 d-flex flex-column align-items-center justify-content-center py-4">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-6 d-flex flex-column align-items-center justify-content-center">
+                        <div class="card mb-3 form-group">
+                            <div class="card-body">
+                                <div class="pt-4 pb-2">
+                                    <h5 class="card-title text-center pb-0 fs-4">회원정보 수정</h5>
+                                </div>
+                                <form class="row g-3" name="updateFrm" id="updateFrm" method="post"
+                                    action="/member/modify">
+                                    <div class="col-12 form-group">
+                                        <input type="hidden" name="id" id="id" value="{{viewData.id}}">
+                                        <label for="username" class="form-label">이름 수정</label>
+                                        <input type="text" name="username" class="form-control" id="username"
+                                            value="{{viewData.name}}">
+                                    </div>
+
+                                    <div class="col-12 form-group">
+                                        <label for="userid" class="form-label">User ID 수정</label>
+                                        <input type="text" name="userid" class="form-control" id="userid"
+                                            value="{{viewData.userid}}">
+                                    </div>
+
+                                    <div class="col-12 form-group">
+                                        <label for="passwd" class="form-label">Password 수정</label>
+                                        <input type="password" name="passwd" class="form-control" id="passwd"
+                                            value="{{viewData.passwd}}">
+                                    </div>
+
+                                    <div class="col-12 form-group">
+                                        <label for="passwd1" class="form-label">Password 확인</label>
+                                        <input type="password" name="passwd1" class="form-control" id="passwd1">
+                                    </div>
+                                    <div class="col-12 text-center">
+                                        <button class="btn btn-primary" onclick="checkFrm()">수정</button>
+                                        <a href="/member/?page={{page}}" class="btn btn-secondary">목록</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</main><!-- End #main -->
+
+<script>
+    $.validator.addMethod('atLeastOne', function (value, element, param) {
+        return $('.at-least-one').filter(function () {
+            return $(this).val();
+        }).length > 0;
+    }, '적어도 하나의 필드를 입력해야 합니다.');
+
+    $(function () {
+        $('#updateFrm').validate({
+            debug: false,
+            onkeyup: false,
+            ignore: "",
+            submitHandler: function (f) {
+            },
+            rules: {
+                username: {
+                    required: true,
+                },
+                userid: {
+                    required: true,
+                    remote: {
+                        url: '/member/checkUniqueId',
+                        type: 'post',
+                        data: {
+                            id: function () {
+                                return $('#id').val();
+                            },
+                            userid: function () {
+                                return $('#userid').val();
+                            },
+                            currentId: function () {
+                                return $('#currentId').val();
+                            }
+                        },
+                    },
+                },
+                passwd: {
+                    required: true,
+                },
+                passwd1: {
+                    required: true,
+                    equalTo: '#passwd',
+                },
+            },
+            messages: {
+                username: {
+                    required: "이름을 입력하세요",
+                },
+                userid: {
+                    required: "아이디를 입력하세요",
+                    remote: "중복된 아이디 입니다.",
+                },
+                passwd: {
+                    required: "비밀번호를 입력하세요.",
+                },
+                passwd1: {
+                    required: " 비밀번호를 확인하세요",
+                    remote: "비밀번호가 일치하지 않습니다.",
+                },
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+    });
+
+    function checkFrm() {
+        let f = document.updateFrm;
+
+        if ($(f).valid()) {
+            f.submit();
+        }
+    }
+</script>
+{%include "include/footer.html"%}
